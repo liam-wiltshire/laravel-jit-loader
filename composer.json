@@ -1,6 +1,7 @@
 {
   "name": "liam-wiltshire/laravel-jit-loader",
   "description": "Just In Time relationship loader for Laravel",
+  "license": "MIT",
   "authors": [
     {
       "name": "Liam Wiltshire",
