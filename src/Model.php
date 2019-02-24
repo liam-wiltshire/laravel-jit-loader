@@ -25,7 +25,7 @@ class Model extends EloquentModel
     protected $parentCollection = null;
 
 
-    private function shouldAutoLoad()
+    private function shouldAutoLoad(): bool
     {
         return ($this->parentCollection
             && count($this->parentCollection) > 1
@@ -44,12 +44,12 @@ class Model extends EloquentModel
 
         $relations = $this->$method();
         if (!$relations instanceof Relation) {
-            throw new LogicException(sprintf(
-                '%s::%s must return a relationship instance.', static::class, $method
-            ));
+            throw new LogicException(
+                sprintf('%s::%s must return a relationship instance.', static::class, $method)
+            );
         }
 
-        if ($this->shouldAutoLoad())  {
+        if ($this->shouldAutoLoad()) {
             $this->parentCollection->loadMissing($method);
         }
         return $this->$method()->getResults();
