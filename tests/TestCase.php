@@ -45,5 +45,16 @@ class TestCase extends \PHPUnit\Framework\TestCase
         DummyModel::create(array('dummy_model_id' => 2));
         DummyModel::create(array('dummy_model_id' => 1));
 
+        Manager::schema()->create('trait_models', function($table) {
+            $table->increments('id');
+            $table->integer('trait_model_id');
+            $table->timestamps();
+        });
+        TraitModel::create(array('trait_model_id' => 5));
+        TraitModel::create(array('trait_model_id' => 4));
+        TraitModel::create(array('trait_model_id' => 3));
+        TraitModel::create(array('trait_model_id' => 2));
+        TraitModel::create(array('trait_model_id' => 1));
+
     }
 }

@@ -81,7 +81,7 @@ Memory:26MiB
 liam-wiltshire/laravel-jit-loader is available as a composer package:
 `composer require liam-wiltshire/laravel-jit-loader`
 
-Once installed, have your models extend the `\LiamWiltshire\LaravelJitLoader\Model` class instead of the default eloquent model, and JIT loading will be automatically enabled.
+Once installed, use the `\LiamWiltshire\LaravelJitLoader\Concerns\AutoloadsRelationships` trait in your model, or have your models extend the `\LiamWiltshire\LaravelJitLoader\Model` class instead of the default eloquent model, and JIT loading will be automatically enabled.
 
 # Limitations
 This is an early release based on specific use cases. At the moment the autoloading will only be used when the relationship is loaded like a property e.g. `$user->company->name` instead of `$user->company()->first()->name`. I am working on supporting relations loaded in alternate ways, however there is more complexity in that so there isn't a fixed timescale as of yet!
