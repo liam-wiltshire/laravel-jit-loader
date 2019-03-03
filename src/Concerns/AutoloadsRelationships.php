@@ -44,6 +44,20 @@ trait AutoloadsRelationships
     }
 
     /**
+     * @codeCoverageIgnore
+     */
+    private function getLogDriver()
+    {
+        if (!$this->logDriver) {
+            /**
+             * @var LogManager $logManager
+             */
+            $logManager = app(LogManager::class);
+            $this->logDriver = $logManager->channel($this->logChannel);
+        }
+    }
+
+    /**
      * Log the fact we have used the JIT loader, if required
      *
      * @param string $relationship
@@ -57,15 +71,10 @@ trait AutoloadsRelationships
             return false;
         }
 
-        if (!$this->logDriver) {
-            /**
-             * @var LogManager $logManager
-             */
-            $logManager = app(LogManager::class);
-            $this->logDriver = $logManager->channel($this->logChannel);
-        }
+        $this->getLogDriver();
 
-        $this->logDriver->info("[LARAVEL-JIT-LOADER] Relationship {$relationship} was JIT-loaded. Called in {$file} on line {$lineNo}");
+        $this->logDriver->info("[LARAVEL-JIT-LOADER] Relationship {$relationship} was JIT-loaded."
+        ." Called in {$file} on line {$lineNo}");
     }
 
     /**
