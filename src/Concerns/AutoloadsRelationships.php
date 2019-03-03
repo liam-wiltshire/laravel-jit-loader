@@ -73,8 +73,13 @@ trait AutoloadsRelationships
 
         $this->getLogDriver();
 
-        $this->logDriver->info("[LARAVEL-JIT-LOADER] Relationship {$relationship} was JIT-loaded."
-        ." Called in {$file} on line {$lineNo}");
+        if (strpos($file, "framework/views/") !== false) {
+            $blade = file($file)[0];
+            $blade = trim(str_replace(["<?php /* ", " */ ?>"], "", $blade));
+        }
+
+        $this->logDriver->info("[LARAVEL-JIT-LOADER] Relationship ". self::class."::{$relationship} was JIT-loaded."
+            ." Called in {$file} on line {$lineNo} " . (isset($blade) ? "view: {$blade})" : ""));
     }
 
     /**
