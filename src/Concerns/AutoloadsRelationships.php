@@ -58,6 +58,21 @@ trait AutoloadsRelationships
     }
 
     /**
+     * @param string $file
+     * @return bool|string
+     * @codeCoverageIgnore
+     */
+    private function getBlade(string $file)
+    {
+        if (strpos($file, "framework/views/") === false) {
+            return false;
+        }
+
+        $blade = file($file)[0];
+        return trim(str_replace(["<?php /* ", " */ ?>"], "", $blade));
+    }
+
+    /**
      * Log the fact we have used the JIT loader, if required
      *
      * @param string $relationship
@@ -73,13 +88,10 @@ trait AutoloadsRelationships
 
         $this->getLogDriver();
 
-        if (strpos($file, "framework/views/") !== false) {
-            $blade = file($file)[0];
-            $blade = trim(str_replace(["<?php /* ", " */ ?>"], "", $blade));
-        }
+        $blade = $this->getBlade($file);
 
         $this->logDriver->info("[LARAVEL-JIT-LOADER] Relationship ". self::class."::{$relationship} was JIT-loaded."
-            ." Called in {$file} on line {$lineNo} " . (isset($blade) ? "view: {$blade})" : ""));
+            ." Called in {$file} on line {$lineNo} " . ($blade ? "view: {$blade})" : ""));
     }
 
     /**
