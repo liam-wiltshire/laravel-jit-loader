@@ -3,9 +3,11 @@
 namespace LiamWiltshire\LaravelJitLoader\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Log\LogManager;
 use LogicException;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Collection;
+use Psr\Log\LoggerInterface;
 
 /**
  * Trait AutoloadsRelationships
@@ -24,11 +26,46 @@ trait AutoloadsRelationships
      */
     protected $parentCollection = null;
 
+    /**
+     * @var ?LoggerInterface
+     */
+    protected $logDriver;
+
+
+    /**
+     * Decide if we are using autoloading in this instance
+     * @return bool
+     */
     private function shouldAutoLoad(): bool
     {
         return ($this->parentCollection
             && count($this->parentCollection) > 1
             && count($this->parentCollection) <= $this->autoloadThreshold);
+    }
+
+    /**
+     * Log the fact we have used the JIT loader, if required
+     *
+     * @param string $relationship
+     * @param string $file
+     * @param int $lineNo
+     * @return bool
+     */
+    private function logAutoload(string $relationship, string $file, int $lineNo)
+    {
+        if (!isset($this->logChannel)) {
+            return false;
+        }
+
+        if (!$this->logDriver) {
+            /**
+             * @var LogManager $logManager
+             */
+            $logManager = app(LogManager::class);
+            $this->logDriver = $logManager->channel($this->logChannel);
+        }
+
+        $this->logDriver->info("[LARAVEL-JIT-LOADER] Relationship {$relationship} was JIT-loaded. Called in {$file} on line {$lineNo}");
     }
 
     /**
@@ -49,7 +86,11 @@ trait AutoloadsRelationships
         }
 
         if ($this->shouldAutoLoad()) {
-            $this->parentCollection->loadMissing($method);
+            if (!$this->relationLoaded($method)) {
+                $stack = debug_backtrace()[3];
+                $this->logAutoload($method, $stack['file'], $stack['line']);
+                $this->parentCollection->loadMissing($method);
+            }
         }
 
         return tap($relation->getResults(), function ($results) use ($method) {
