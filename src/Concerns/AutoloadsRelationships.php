@@ -24,6 +24,10 @@ trait AutoloadsRelationships
      */
     protected $parentCollection = null;
 
+    /**
+     * Check to see if we should autoload
+     * @return bool
+     */
     private function shouldAutoLoad(): bool
     {
         return ($this->parentCollection
