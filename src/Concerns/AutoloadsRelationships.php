@@ -80,7 +80,7 @@ trait AutoloadsRelationships
     }
 
     /**
-     * Disable autoloading of relationships via this model
+     * Disable autoloading of relationships on this model
      * @return Model
      */
     public function disableAutoload(): Model
