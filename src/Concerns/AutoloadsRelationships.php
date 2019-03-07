@@ -24,6 +24,10 @@ trait AutoloadsRelationships
      */
     protected $parentCollection = null;
 
+    /**
+     * Check to see if we should autoload
+     * @return bool
+     */
     private function shouldAutoLoad(): bool
     {
         return ($this->parentCollection
@@ -76,7 +80,7 @@ trait AutoloadsRelationships
     }
 
     /**
-     * Disable autoloading of relationships via this model
+     * Disable autoloading of relationships on this model
      * @return Model
      */
     public function disableAutoload(): Model
