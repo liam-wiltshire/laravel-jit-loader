@@ -117,7 +117,7 @@ trait AutoloadsRelationships
                 $this->logAutoload($method, $stack['file'], $stack['line']);
                 $this->parentCollection->loadMissing($method);
 
-                return current($this->parentCollection->getIterator())->relations[$method];
+                return $this->relations[$method];
             }
         }
 
