@@ -137,8 +137,8 @@ trait AutoloadsRelationships
         $collection = new Collection($models);
         unset($models);
 
-        foreach ($collection as &$model) {
-            $model->parentCollection = &$collection;
+        foreach ($collection as $model) {
+            $model->parentCollection = $collection;
         }
 
         return $collection;
