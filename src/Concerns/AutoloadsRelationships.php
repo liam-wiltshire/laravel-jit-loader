@@ -113,7 +113,7 @@ trait AutoloadsRelationships
 
         if ($this->shouldAutoLoad()) {
             if (!$this->relationLoaded($method)) {
-                $stack = debug_backtrace()[3];
+                $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4)[3];
                 $this->logAutoload($method, $stack['file'], $stack['line']);
                 $this->parentCollection->loadMissing($method);
 
