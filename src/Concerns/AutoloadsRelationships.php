@@ -90,7 +90,7 @@ trait AutoloadsRelationships
 
         $blade = $this->getBlade($file);
 
-        $this->logDriver->info("[LARAVEL-JIT-LOADER] Relationship ". self::class."::{$relationship} was JIT-loaded."
+        $this->logDriver->info("[LARAVEL-JIT-LOADER] Relationship ". static::class."::{$relationship} was JIT-loaded."
             ." Called in {$file} on line {$lineNo} " . ($blade ? "view: {$blade})" : ""));
     }
 
