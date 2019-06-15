@@ -1,6 +1,12 @@
 # liam-wiltshire/laravel-jit-loader
 
-liam-wiltshire/laravel-jit-loader is an extension to the default Laravel Eloquent model to 'very lazy eager load' relationships.
+liam-wiltshire/laravel-jit-loader is an extension to the default Laravel Eloquent model to 'very lazy eager load' relationships with performance comparable with eager loading.
+
+# Installation
+liam-wiltshire/laravel-jit-loader is available as a composer package:
+`composer require liam-wiltshire/laravel-jit-loader`
+
+Once installed, use the `\LiamWiltshire\LaravelJitLoader\Concerns\AutoloadsRelationships` trait in your model, or have your models extend the `\LiamWiltshire\LaravelJitLoader\Model` class instead of the default eloquent model, and JIT loading will be automatically enabled.
 
 # Very Lazy Eager Load?
 In order to avoid [N+1 issues](https://secure.phabricator.com/book/phabcontrib/article/n_plus_one/), you'd normally load your required relationships while building your collection:
@@ -23,7 +29,7 @@ In some situations however, this may not be possible - perhaps front-end develop
 This change will track if your models belong to a collection, and if they do and a relationship is called that hasn't already been loaded, the relationship will be loaded across the whole collection just in time for use.
 
 # Does This Work?
-Yes. At least, it does in our production Laravel app. It's also been tested against a (rather constructed) test, pulling out staff, companies and addresses - while this isn't a 'real life' representation, it should give an idea of what it can do:
+This is used in a number of production applications with no issues. It's also been tested against a (rather constructed) test, pulling out staff, companies and addresses - while this isn't a 'real life' representation, it should give an idea of what it can do:
 
 ```php
     public function handle()
@@ -66,22 +72,45 @@ Yes. At least, it does in our production Laravel app. It's also been tested agai
 
 Running this locally against a database with 200 companies, 1157 addresses and 39685 staff:
 
-## Without JIT loading:
-Queries Run: 10739
-Execution Time: 16.058979034424
-Memory:68MiB
+## Without JIT Loading:
+Queries Run: 10739<br />
+Execution Time: 17.090859889984<br />
+Memory: 70MiB
 
 
-## With JIT loading:
-Queries Run: 6
-Execution Time: 1.6715261936188
-Memory:26MiB
+## With JIT Loading:
+Queries Run: 3<br />
+Execution Time: 1.7261669635773<br />
+Memory: 26MiB
 
-# Installation
-liam-wiltshire/laravel-jit-loader is available as a composer package:
-`composer require liam-wiltshire/laravel-jit-loader`
 
-Once installed, use the `\LiamWiltshire\LaravelJitLoader\Concerns\AutoloadsRelationships` trait in your model, or have your models extend the `\LiamWiltshire\LaravelJitLoader\Model` class instead of the default eloquent model, and JIT loading will be automatically enabled.
+## 'Proper' Eager Loading:
+Queries Run: 3<br />
+Execution Time: 1.659285068512<br />
+Memory: 26MiB
+
+# Logging
+As you can see the different between JIT loading and traditional eager loading is small (c. 0.067 seconds in our above test), so you can likely rely on JIT loader to protect you.
+
+However, if you want to log when the JIT loader is used so that you can do back and correct them later, you can add a `$logChannel` property to your models to ask the trait to log into that channel as configured in Laravel
+
+```php
+class Address extends Model
+{
+    use AutoloadsRelationships;
+    public $timestamps = false;
+
+    /**
+     * @var string
+     */
+    protected $logChannel = 'jit-logger';
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+}
+```
 
 # Limitations
 This is an early release based on specific use cases. At the moment the autoloading will only be used when the relationship is loaded like a property e.g. `$user->company->name` instead of `$user->company()->first()->name`. I am working on supporting relations loaded in alternate ways, however there is more complexity in that so there isn't a fixed timescale as of yet!

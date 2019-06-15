@@ -3,9 +3,11 @@
 namespace LiamWiltshire\LaravelJitLoader\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Log\LogManager;
 use LogicException;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Collection;
+use Psr\Log\LoggerInterface;
 
 /**
  * Trait AutoloadsRelationships
@@ -25,6 +27,12 @@ trait AutoloadsRelationships
     protected $parentCollection = null;
 
     /**
+     * @var ?LoggerInterface
+     */
+    protected $logDriver;
+
+
+    /**
      * Check to see if we should autoload
      * @return bool
      */
@@ -33,6 +41,57 @@ trait AutoloadsRelationships
         return ($this->parentCollection
             && count($this->parentCollection) > 1
             && count($this->parentCollection) <= $this->autoloadThreshold);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    private function getLogDriver()
+    {
+        if (!$this->logDriver) {
+            /**
+             * @var LogManager $logManager
+             */
+            $logManager = app(LogManager::class);
+            $this->logDriver = $logManager->channel($this->logChannel);
+        }
+    }
+
+    /**
+     * @param string $file
+     * @return bool|string
+     * @codeCoverageIgnore
+     */
+    private function getBlade(string $file)
+    {
+        if (strpos($file, "framework/views/") === false) {
+            return false;
+        }
+
+        $blade = file($file)[0];
+        return trim(str_replace(["<?php /* ", " */ ?>"], "", $blade));
+    }
+
+    /**
+     * Log the fact we have used the JIT loader, if required
+     *
+     * @param string $relationship
+     * @param string $file
+     * @param int $lineNo
+     * @return bool
+     */
+    private function logAutoload(string $relationship, string $file, int $lineNo)
+    {
+        if (!isset($this->logChannel)) {
+            return false;
+        }
+
+        $this->getLogDriver();
+
+        $blade = $this->getBlade($file);
+
+        $this->logDriver->info("[LARAVEL-JIT-LOADER] Relationship ". self::class."::{$relationship} was JIT-loaded."
+            ." Called in {$file} on line {$lineNo} " . ($blade ? "view: {$blade})" : ""));
     }
 
     /**
@@ -53,7 +112,13 @@ trait AutoloadsRelationships
         }
 
         if ($this->shouldAutoLoad()) {
-            $this->parentCollection->loadMissing($method);
+            if (!$this->relationLoaded($method)) {
+                $stack = debug_backtrace()[3];
+                $this->logAutoload($method, $stack['file'], $stack['line']);
+                $this->parentCollection->loadMissing($method);
+
+                return current($this->parentCollection->getIterator())->relations[$method];
+            }
         }
 
         return tap($relation->getResults(), function ($results) use ($method) {

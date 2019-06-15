@@ -7,15 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use LiamWiltshire\LaravelJitLoader\Concerns\AutoloadsRelationships;
 use Psr\Log\LoggerInterface;
 
-class TraitModel extends Model {
+class TraitlessModel extends Model {
 
-    use AutoloadsRelationships;
-
-    protected $fillable = ['trait_model_id'];
+    protected $fillable = ['traitless_model_id'];
 
     public function myRelationship()
     {
-        return $this->hasOne(TraitModel::class);
+        return $this->hasOne(TraitlessModel::class);
     }
 
     public function nonExistentRelationship()
