@@ -2,7 +2,6 @@
 
 namespace LiamWiltshire\LaravelJitLoader\Tests;
 
-
 class ModelTest extends TestCase
 {
     public function testGetRelationshipFromMethodWithNonExistentRelationshipThrowsException()
@@ -39,5 +38,3 @@ class ModelTest extends TestCase
         $this->assertTrue($models[1]->relationLoaded('myRelationship'));
     }
 }
-
-

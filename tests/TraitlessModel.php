@@ -2,12 +2,11 @@
 
 namespace LiamWiltshire\LaravelJitLoader\Tests;
 
-
 use Illuminate\Database\Eloquent\Model;
 use Psr\Log\LoggerInterface;
 
-class TraitlessModel extends Model {
-
+class TraitlessModel extends Model
+{
     protected $fillable = ['traitless_model_id'];
 
     public function myRelationship()

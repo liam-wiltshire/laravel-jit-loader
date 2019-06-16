@@ -2,13 +2,12 @@
 
 namespace LiamWiltshire\LaravelJitLoader\Tests;
 
-
 use Illuminate\Database\Eloquent\Model;
 use LiamWiltshire\LaravelJitLoader\Concerns\AutoloadsRelationships;
 use Psr\Log\LoggerInterface;
 
-class TraitModel extends Model {
-
+class TraitModel extends Model
+{
     use AutoloadsRelationships;
 
     protected $fillable = ['trait_model_id'];
