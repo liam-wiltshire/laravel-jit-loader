@@ -121,7 +121,7 @@ trait AutoloadsRelationships
                 $this->logAutoload($method);
                 $this->parentCollection->load($method);
 
-                return current($this->parentCollection->getIterator())->relations[$method];
+                return $this->relations[$method];
             }
         }
 
