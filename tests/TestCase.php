@@ -9,8 +9,6 @@
 namespace LiamWiltshire\LaravelJitLoader\Tests;
 
 
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Capsule\Manager;
 
 class TestCase extends \PHPUnit\Framework\TestCase

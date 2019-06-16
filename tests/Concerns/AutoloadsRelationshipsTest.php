@@ -8,7 +8,6 @@
 
 namespace LiamWiltshire\LaravelJitLoader\Tests\Concerns;
 
-use Illuminate\Log\LogManager;
 use LiamWiltshire\LaravelJitLoader\Tests\TestCase;
 use LiamWiltshire\LaravelJitLoader\Tests\TraitlessModel;
 use LiamWiltshire\LaravelJitLoader\Tests\TraitModel;
