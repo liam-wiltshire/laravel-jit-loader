@@ -80,13 +80,18 @@ trait AutoloadsRelationships
      * @param int $lineNo
      * @return bool
      */
-    private function logAutoload(string $relationship, string $file, int $lineNo)
+    private function logAutoload(string $relationship)
     {
         if (!isset($this->logChannel)) {
             return false;
         }
 
+        $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5)[4];
+
         $this->getLogDriver();
+
+        $file = $stack['file'];
+        $lineNo = $stack['line'];
 
         $blade = $this->getBlade($file);
 
@@ -113,8 +118,7 @@ trait AutoloadsRelationships
 
         if ($this->shouldAutoLoad()) {
             if (!$this->relationLoaded($method)) {
-                $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4)[3];
-                $this->logAutoload($method, $stack['file'], $stack['line']);
+                $this->logAutoload($method);
                 $this->parentCollection->load($method);
 
                 return current($this->parentCollection->getIterator())->relations[$method];
