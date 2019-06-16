@@ -8,14 +8,10 @@
 
 namespace LiamWiltshire\LaravelJitLoader\Tests;
 
-
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Capsule\Manager;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
-
     public $db;
 
     public $messages = [];
@@ -44,7 +40,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
     public function migrateIdentitiesTable()
     {
-        Manager::schema()->create('dummy_models', function($table) {
+        Manager::schema()->create('dummy_models', function ($table) {
             $table->increments('id');
             $table->integer('dummy_model_id');
             $table->timestamps();
@@ -56,7 +52,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             $x--;
         }
 
-        Manager::schema()->create('trait_models', function($table) {
+        Manager::schema()->create('trait_models', function ($table) {
             $table->increments('id');
             $table->integer('trait_model_id');
             $table->timestamps();
@@ -68,7 +64,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             $x--;
         }
 
-        Manager::schema()->create('traitless_models', function($table) {
+        Manager::schema()->create('traitless_models', function ($table) {
             $table->increments('id');
             $table->integer('traitless_model_id');
             $table->timestamps();
@@ -79,7 +75,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
             TraitlessModel::create(array('traitless_model_id' => $x));
             $x--;
         }
-
     }
 
     public function __destruct()

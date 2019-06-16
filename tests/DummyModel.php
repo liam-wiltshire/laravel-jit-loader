@@ -2,11 +2,10 @@
 
 namespace LiamWiltshire\LaravelJitLoader\Tests;
 
-
 use LiamWiltshire\LaravelJitLoader\Model;
 
-class DummyModel extends Model {
-
+class DummyModel extends Model
+{
     protected $fillable = ['dummy_model_id'];
 
     public function myRelationship()

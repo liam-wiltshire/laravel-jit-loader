@@ -2,7 +2,6 @@
 
 namespace LiamWiltshire\LaravelJitLoader\Tests;
 
-
 class ModelTest extends TestCase
 {
     public function testGetRelationshipFromMethodWithNonExistentRelationshipThrowsException()
@@ -16,7 +15,7 @@ class ModelTest extends TestCase
     public function testGetRelationshipFromMethodAfterDisableAutoLoadCalledDoesntAutoLoad()
     {
         $models = DummyModel::all();
-        $related = $models[0]->disableAutoload()->myRelationship;
+        $models[0]->disableAutoload()->myRelationship;
 
         $this->assertFalse($models[1]->relationLoaded('myRelationship'));
     }
@@ -25,7 +24,7 @@ class ModelTest extends TestCase
     {
         $models = DummyModel::all();
         $models[0]->setAutoloadThreshold(2);
-        $related = $models[0]->myRelationship;
+        $models[0]->myRelationship;
 
         $this->assertFalse($models[1]->relationLoaded('myRelationship'));
     }
@@ -34,10 +33,8 @@ class ModelTest extends TestCase
     public function testGetRelationshipFromMethodUnderThresholdDoesAutoLoad()
     {
         $models = DummyModel::all();
-        $related = $models[0]->myRelationship;
+        $models[0]->myRelationship;
 
         $this->assertTrue($models[1]->relationLoaded('myRelationship'));
     }
 }
-
-
