@@ -80,18 +80,23 @@ trait AutoloadsRelationships
      * @param int $lineNo
      * @return bool
      */
-    private function logAutoload(string $relationship, string $file, int $lineNo)
+    private function logAutoload(string $relationship)
     {
         if (!isset($this->logChannel)) {
             return false;
         }
 
+        $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5)[4];
+
         $this->getLogDriver();
+
+        $file = $stack['file'];
+        $lineNo = $stack['line'];
 
         $blade = $this->getBlade($file);
 
-        $this->logDriver->info("[LARAVEL-JIT-LOADER] Relationship ". self::class."::{$relationship} was JIT-loaded."
-            ." Called in {$file} on line {$lineNo} " . ($blade ? "view: {$blade})" : ""));
+        $this->logDriver->info("[LARAVEL-JIT-LOADER] Relationship ". static::class."::{$relationship} was JIT-loaded."
+            ." Called in {$file} on line {$lineNo}" . ($blade ? " view: {$blade})" : ""));
     }
 
     /**
@@ -113,11 +118,10 @@ trait AutoloadsRelationships
 
         if ($this->shouldAutoLoad()) {
             if (!$this->relationLoaded($method)) {
-                $stack = debug_backtrace()[3];
-                $this->logAutoload($method, $stack['file'], $stack['line']);
+                $this->logAutoload($method);
                 $this->parentCollection->load($method);
 
-                return current($this->parentCollection->getIterator())->relations[$method];
+                return $this->relations[$method];
             }
         }
 
