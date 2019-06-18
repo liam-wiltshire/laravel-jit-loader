@@ -90,9 +90,11 @@ trait AutoloadsRelationships
 
         $this->getLogDriver();
 
+        $file = $stack['file'];
+        
         $this->logDriver->info('[LARAVEL-JIT-LOADER] Relationship was JIT-loaded.', [
             'relationship' => static::class.'::'.$relationship,
-            'file' => $stack['file'],
+            'file' => $file,
             'line' => $stack['line'],
             'view' => $this->getBlade($file),
         ]);
