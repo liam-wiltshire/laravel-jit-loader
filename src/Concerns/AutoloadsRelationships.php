@@ -90,13 +90,12 @@ trait AutoloadsRelationships
 
         $this->getLogDriver();
 
-        $file = $stack['file'];
-        $lineNo = $stack['line'];
-
-        $blade = $this->getBlade($file);
-
-        $this->logDriver->info("[LARAVEL-JIT-LOADER] Relationship ". static::class."::{$relationship} was JIT-loaded."
-            ." Called in {$file} on line {$lineNo}" . ($blade ? " view: {$blade})" : ""));
+        $this->logDriver->info('[LARAVEL-JIT-LOADER] Relationship was JIT-loaded.', [
+            'relationship' => static::class.'::'.$relationship,
+            'file' => $stack['file'],
+            'line' => $stack['line'],
+            'view' => $this->getBlade($file),
+        ]);
     }
 
     /**
