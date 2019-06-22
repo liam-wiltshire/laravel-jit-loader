@@ -92,12 +92,15 @@ trait AutoloadsRelationships
 
         $file = $stack['file'];
         
-        $this->logDriver->info('[LARAVEL-JIT-LOADER] Relationship '.static::class.'::'.$relationship.' was JIT-loaded.', [
-            'relationship' => static::class.'::'.$relationship,
-            'file' => $file,
-            'line' => $stack['line'],
-            'view' => $this->getBlade($file),
-        ]);
+        $this->logDriver->info(
+            '[LARAVEL-JIT-LOADER] Relationship '.static::class.'::'.$relationship.' was JIT-loaded.',
+            [
+                'relationship' => static::class.'::'.$relationship,
+                'file' => $file,
+                'line' => $stack['line'],
+                'view' => $this->getBlade($file),
+            ]
+        );
     }
 
     /**
