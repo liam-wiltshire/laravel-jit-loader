@@ -51,13 +51,19 @@ class AutoloadsRelationshipsTest extends TestCase
 
     public function testGetRelationshipFromMethodUnderThresholdDoesAutoLoadWithLogging()
     {
-        $message = "[LARAVEL-JIT-LOADER] Relationship " . TraitModel::class . "::myRelationship was JIT-loaded. Called in " . __FILE__ . " on line " . (__LINE__ + 12);
+        $message = "[LARAVEL-JIT-LOADER] Relationship " . TraitModel::class . "::myRelationship was JIT-loaded.";
+        $context = [
+            'relationship' => TraitModel::class.'::myRelationship',
+            'file' => __FILE__,
+            'line' => __LINE__ + 14,
+            'view' => false,
+        ];
 
         $driver = $this->getMockBuilder(LoggerInterface::class)->getMock();
         $driver
             ->expects($this->atLeastOnce())
             ->method('info')
-            ->with($message)
+            ->with($message, $context)
             ->willReturn(true);
 
         $models = TraitModel::all();
