@@ -98,7 +98,6 @@ However, if you want to log when the JIT loader is used so that you can do back 
 class Address extends Model
 {
     use AutoloadsRelationships;
-    public $timestamps = false;
 
     /**
      * @var string
