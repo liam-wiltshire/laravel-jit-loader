@@ -31,7 +31,5 @@ jobs:
             - ./vendor
 
       # run tests with phpunit
-      - run: ./vendor/bin/phpunit
-      - run: ./vendor/bin/phpcs --standard=PSR2 src/
-      - run: php tests/CoverageCheck.php tests/clover.xml 95
+      - run: composer test
 
