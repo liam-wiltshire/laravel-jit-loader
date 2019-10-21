@@ -1,39 +1,37 @@
 {
-  "name": "liam-wiltshire/laravel-jit-loader",
-  "description": "Just In Time relationship loader for Laravel",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Liam Wiltshire",
-      "email": "liam@w.iltshi.re"
-    }
-  ],
-  "require": {
-    "php": ">=7.1.0",
-    "illuminate/database": "^5.5.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^7.0.0",
-    "squizlabs/php_codesniffer" : "^3.0.0",
-    "phpunit/php-code-coverage": "^6.0.0",
-    "illuminate/log": "^5.5.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "LiamWiltshire\\LaravelJitLoader\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "LiamWiltshire\\LaravelJitLoader\\Tests\\": "tests/"
-    }
-  },
-  "scripts": {
+	"name": "liam-wiltshire/laravel-jit-loader",
+	"description": "Just In Time relationship loader for Laravel",
+	"license": "MIT",
+	"authors": [{
+		"name": "Liam Wiltshire",
+		"email": "liam@w.iltshi.re"
+	}],
+	"require": {
+		"php": ">=7.1.0",
+		"illuminate/database": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^7.0.0",
+		"squizlabs/php_codesniffer": "^3.0.0",
+		"phpunit/php-code-coverage": "^6.0.0",
+		"illuminate/log": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"LiamWiltshire\\LaravelJitLoader\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"LiamWiltshire\\LaravelJitLoader\\Tests\\": "tests/"
+		}
+	},
+	"scripts": {
     "test": [
       "./vendor/bin/phpunit",
       "./vendor/bin/phpcs --standard=PSR2 src/",
       "php tests/CoverageCheck.php tests/clover.xml 95"
     ]
-  },
-  "minimum-stability": "stable"
+	},
+	"minimum-stability": "stable"
 }
