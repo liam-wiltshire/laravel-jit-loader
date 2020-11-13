@@ -24,7 +24,7 @@ trait AutoloadsRelationships
     /**
      * @var ?Collection
      */
-    protected $parentCollection = null;
+    public $parentCollection = null;
 
     /**
      * @var ?LoggerInterface
@@ -112,7 +112,9 @@ trait AutoloadsRelationships
      */
     public function getRelationshipFromMethod($method)
     {
+        $fqRelation = "";
         $relation = $this->$method();
+        $fqRelation = $method;
 
         if (!$relation instanceof Relation) {
             throw new LogicException(
@@ -122,9 +124,17 @@ trait AutoloadsRelationships
 
         if ($this->shouldAutoLoad()) {
             if (!$this->relationLoaded($method)) {
-                $this->logAutoload($method);
-                $this->parentCollection->load($method);
+                $parentCollection = $this->parentCollection;
+                while (isset($parentCollection->caller)) {
+                    $fqRelation = $parentCollection->caller->method . "." . $fqRelation;
+                    $parentCollection = $parentCollection->caller->model->parentCollection;
+                }
 
+                $this->logAutoload($fqRelation);
+                $parentCollection->loadMissing($fqRelation);
+
+                $collection = $this->relations[$method];
+                $collection->caller = (object) ['method' => $method, 'model' => $this];
                 return $this->relations[$method];
             }
         }
